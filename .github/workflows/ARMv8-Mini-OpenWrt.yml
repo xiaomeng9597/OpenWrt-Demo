@@ -69,6 +69,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         #docker rmi $(docker images -q)
+        df -hT
         sudo rm -rf /usr/share/dotnet /etc/apt/sources.list.d /usr/local/lib/android $AGENT_TOOLSDIRECTORY
         sudo -E apt-get -y purge azure-cli ghc* zulu* llvm* firefox google* dotnet* powershell openjdk* mongodb* moby* || true
         sudo -E apt-get -y update
@@ -81,7 +82,8 @@ jobs:
     - name: Clone Source Code
       id: clone
       run: |
-        df -hT $GITHUB_WORKSPACE
+        #df -hT $GITHUB_WORKSPACE
+        df -hT
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
