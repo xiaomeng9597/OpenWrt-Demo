@@ -20,7 +20,39 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
+  extend_root_partition:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y parted rsync
+
+    - name: Unmount Root Partition
+      run: |
+        sudo umount /
+
+    - name: Resize Filesystem
+      run: |
+        sudo resize2fs /dev/root
+
+    - name: Extend Partition
+      run: |
+        sudo parted -s /dev/sda resizepart 2 100%
+
+    - name: Mount Root Partition
+      run: |
+        sudo mount /dev/root /
+
+    - name: Verify Disk Space
+      run: df -hT
+      
   Build:
+    needs: [extend_root_partition]
     runs-on: ubuntu-22.04
 
     outputs:
