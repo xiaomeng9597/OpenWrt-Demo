@@ -23,14 +23,6 @@ jobs:
   fdisk:
     runs-on: ubuntu-22.04
     
-    outputs:
-      COMMIT_AUTHOR: ${{ needs.Build.outputs.COMMIT_AUTHOR }}
-      COMMIT_DATE: ${{ needs.Build.outputs.COMMIT_DATE }}
-      COMMIT_MESSAGE: ${{ needs.Build.outputs.COMMIT_MESSAGE }}
-      COMMIT_HASH: ${{ needs.Build.outputs.COMMIT_HASH }}
-      DEVICE_TARGET: ${{ needs.Build.outputs.DEVICE_TARGET }}
-      DEVICE_SUBTARGET: ${{ needs.Build.outputs.DEVICE_SUBTARGET }}
-
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -77,7 +69,7 @@ jobs:
     needs: [fdisk]
     runs-on: ubuntu-22.04
 
-    env:
+    outputs:
       COMMIT_AUTHOR: ${{ steps.clone.outputs.COMMIT_AUTHOR }}
       COMMIT_DATE: ${{ steps.clone.outputs.COMMIT_DATE }}
       COMMIT_MESSAGE: ${{ steps.clone.outputs.COMMIT_MESSAGE }}
