@@ -30,8 +30,26 @@ jobs:
     - name: Install Required Packages
       run: |
         sudo apt-get update
-        sudo apt-get install -y parted rsync
+        sudo apt-get install -y parted rsync fuser lsof
+        
+    - name: Find Processes Using Root Partition
+      id: find_processes
+      run: |
+        sudo fuser -mv /
+        sudo lsof /
 
+    - name: Extract PIDs
+      id: extract_pids
+      run: |
+        echo "${{ steps.find_processes.outputs.stdout }}" | grep -Eo '[0-9]+' > pids.txt
+
+    - name: Terminate Processes
+      if: steps.extract_pids.outputs.stdout != ''
+      run: |
+        while IFS= read -r pid; do
+          sudo kill -9 "$pid"
+        done < pids.txt
+        
     - name: Unmount Root Partition
       run: |
         sudo umount /
