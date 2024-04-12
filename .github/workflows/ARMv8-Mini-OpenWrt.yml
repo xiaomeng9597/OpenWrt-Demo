@@ -87,6 +87,7 @@ jobs:
     - name: Generate Variables
       id: variable
       run: |
+        df -hT
         cp $CONFIG_FILE $OPENWRT_PATH/.config
         cd $OPENWRT_PATH
         make defconfig > /dev/null 2>&1
@@ -109,12 +110,14 @@ jobs:
 
     - name: Install Feeds
       run: |
+        df -hT
         cd $OPENWRT_PATH
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
     - name: Load Custom Configuration
       run: |
+        df -hT
         [ -e files ] && mv files $OPENWRT_PATH/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
         chmod +x $GITHUB_WORKSPACE/scripts/*.sh
@@ -126,6 +129,7 @@ jobs:
 
     - name: Download DL Package
       run: |
+        df -hT
         cd $OPENWRT_PATH
         make defconfig
         make download -j8
@@ -135,6 +139,7 @@ jobs:
     - name: Compile Firmware
       id: compile
       run: |
+        df -hT
         cd $OPENWRT_PATH
         mkdir -p files/etc/uci-defaults
         cp $GITHUB_WORKSPACE/scripts/init-settings.sh files/etc/uci-defaults/99-init-settings
