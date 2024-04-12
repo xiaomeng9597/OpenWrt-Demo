@@ -35,44 +35,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
       
-    - name: Install Required Packages
-       run: |
-         sudo apt-get update
-         sudo apt-get install -y parted rsync
-
-     - name: Unmount Root Partition
-       run: |
-         sudo umount /dev/root
-
-     - name: Resize Filesystem
-       run: |
-         sudo resize2fs /dev/root
-
-     - name: Create and Format New Partition
-       run: |
-         sudo parted -s /dev/sdb mklabel gpt
-         sudo parted -s /dev/sdb mkpart primary ext4 0% 100%
-         sudo mkfs.ext4 /dev/sdb1
-
-     - name: Mount New Partition
-       run: |
-         sudo mkdir -p /mnt/newroot
-         sudo mount /dev/sdb1 /mnt/newroot
-
-     - name: Copy Root Filesystem to New Partition
-       run: |
-         sudo rsync -avx --exclude=/mnt/newroot --exclude=/proc --exclude=/sys --exclude=/dev --exclude=/run / /mnt/newroot
-
-     - name: Update /etc/fstab
-       run: |
-         sudo sed -i '/\/dev\/root/s/^/#/' /mnt/newroot/etc/fstab
-         echo "/dev/sdb1  /  ext4  defaults  0  1" | sudo tee -a /mnt/newroot/etc/fstab
-
-     - name: Cleanup and Reboot
-       run: |
-         sudo umount /mnt/newroot
-         sudo reboot
-      
     - name: Check Server Performance
       run: |
         echo "警告⚠"
