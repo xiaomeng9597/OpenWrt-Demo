@@ -37,11 +37,11 @@ jobs:
 
     - name: Remove Tmp Files
       run: |
-        rm -rf /path/to/temporary/files/*
-        echo "" > /var/log/mylogfile.log
-        find /tmp -size +100M -exec rm -f {} \;
-        docker ps -a
-        docker images
+        sudo rm -rf /path/to/temporary/files/*
+        sudo echo "" > /var/log/mylogfile.log
+        sudo find /tmp -size +100M -exec rm -f {} \;
+        sudo docker ps -a
+        sudo docker images
       
     - name: Check Server Performance
       run: |
