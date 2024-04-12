@@ -35,10 +35,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Remove Tmp Files
+    - name: Remove Docker Files
       run: |
-        sudo docker ps -a
-        sudo docker images
+        sudo docker rmi $(docker images -aq)
       
     - name: Check Server Performance
       run: |
