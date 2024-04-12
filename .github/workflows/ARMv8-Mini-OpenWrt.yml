@@ -34,7 +34,28 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
-
+    - name: FDisk
+      run: |
+        sudo umount /dev/root
+        sudo resize2fs /dev/root
+        sudo fdisk /dev/sdb <<EOF
+        p  # Display existing partitions
+        d  # Delete /dev/sdb1 partition
+        n  # Create a new partition
+        p  # Primary partition
+        1  # Partition number 1
+        [ENTER]  # Use default starting sector
+        [ENTER]  # Use default ending sector (maximize the size)
+        p  # Display new partition table
+        w  # Write changes to disk
+        EOF
+        sudo mkfs.ext4 /dev/sdb1
+        sudo mount /dev/sdb1 /mnt
+        sudo rsync -avx --exclude=/mnt --exclude=/proc --exclude=/sys --exclude=/dev --exclude=/run / /mnt
+        sudo sed -i '/\/dev\/root/s/^/#/' /etc/fstab
+        echo "/dev/sdb1  /  ext4  defaults  0  1" | sudo tee -a /etc/fstab
+        sudo reboot
+      
     - name: Check Server Performance
       run: |
         echo "警告⚠"
