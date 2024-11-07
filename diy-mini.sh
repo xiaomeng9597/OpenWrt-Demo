@@ -121,5 +121,8 @@ sed -i 's|admin\\|admin\\/services\\|g' feeds/luci/applications/luci-app-dockerm
 # 取消对 samba4 的菜单调整
 # sed -i '/samba4/s/^/#/' package/lean/default-settings/files/zzz-default-settings
 
+## Add Start
+./scripts/feeds clean
+## Add End
 ./scripts/feeds update -a
 ./scripts/feeds install -a
