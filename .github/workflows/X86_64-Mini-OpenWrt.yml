@@ -111,8 +111,6 @@ jobs:
       run: |
         df -hT
         cd $OPENWRT_PATH
-        ./scripts/feeds clean
-        echo "已清除feeds缓存"
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
